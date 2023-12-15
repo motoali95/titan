@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Прототип внешнего вида мнемокадра</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      #container {
+        position: relative;
+      }
+
+      .tank {
+        width: 100px;
+        height: 50px;
+        background-color: #3498db;
+        position: absolute;
+        bottom: 0;
+        transition: 0.6s;
+      }
+      @keyframes particleAnimation {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(
+              calc(-50% + (random() - 0.5) * 200px),
+              calc(-50% + (random() - 0.5) * 200px)
+            )
+            scale(0);
+          opacity: 0;
+        }
+      }
+      @keyframes explosionAnimation {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(3);
+          opacity: 0;
+        }
+      }
+      .explosion {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        background-color: #ff0000;
+        animation: explosionAnimation 0.5s ease-out;
+      }
+      .particle {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #fff;
+        border-radius: 50%;
+        animation: particleAnimation 0.5s ease-out;
+      }
+
+      .pump {
+        width: 30px;
+        height: 30px;
+        background-color: #2ecc71;
+        position: absolute;
+        bottom: 150px;
+        left: 35px;
+        border-radius: 50%;
+        transition: 0.6s;
+        cursor: pointer;
+      }
+
+      .value {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 18px;
+        color: #2c3e50;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div class="tank"></div>
+      <!-- при нажатии увеличивает давление в емкости -->
+      <div onclick="setTankPlus()" class="pump"></div>
+      <div class="value">Значение: 50%</div>
+    </div>
+
+    <script>
+      // Пример JavaScript для изменения значения и цвета
+      let tankValue = 50;
+
+      function updateTank() {
+        const tank = document.querySelector(".tank");
+        const valueElement = document.querySelector(".value");
+
+        tank.style.height = tankValue + "px";
+        valueElement.textContent = "Значение: " + tankValue + "%";
+
+        if (tankValue > 50) {
+          tank.style.backgroundColor = "#2ecc71"; // Зеленый цвет
+        } else {
+          tank.style.backgroundColor = "#e74c3c"; // Красный цвет
+        }
+        if (tankValue > 100) {
+          tank.classList.add("explosion");
+          tankValue = 20;
+          updateTank();
+        }
+        setTimeout(() => {
+          if (tankValue < 100) {
+            tank.classList.remove("explosion");
+          }
+        }, 1500);
+      }
+
+      setTankPlus = () => {
+        tankValue = tankValue + 20;
+        updateTank();
+      };
+    </script>
+  </body>
+</html>
